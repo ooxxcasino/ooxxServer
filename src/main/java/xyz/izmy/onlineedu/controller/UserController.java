@@ -1,15 +1,15 @@
 package xyz.izmy.onlineedu.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import xyz.izmy.onlineedu.entity.User;
 import xyz.izmy.onlineedu.repository.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.awt.*;
 import java.io.Serializable;
@@ -22,6 +22,7 @@ import java.net.URI;
 
 @Transactional
 @RestController
+@RequestMapping(value = "/user")
 public class UserController {
     private final UserRepository userRepository;
 
@@ -33,13 +34,21 @@ public class UserController {
      *
      * save user
      */
-    @RequestMapping(value = "/user",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registUser(@RequestBody User user)
-    {
-    User savedUser = userRepository.save(user);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedUser.getId()).toUri();
-        return ResponseEntity.created(location).build();
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public Object getUserById(@PathVariable("id") Long id){
+        User user = userRepository.findById(id).orElse(null);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id",1);
+        return user;
     }
+    @RequestMapping(value = "/test",method = RequestMethod.POST)
+    @ResponseBody
+    public Object registUser(HttpServletRequest request, @RequestBody JSONObject jsonObject)
+    {
+
+        return jsonObject.get("text").toString();
+    }
+
 
 }
