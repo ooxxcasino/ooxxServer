@@ -49,11 +49,18 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String label;
 
-    //我的视频
     @OneToMany
     private List<Video> myVideos;
 
     public User() {
+    }
+
+    public List<Video> getMyVideos() {
+        return myVideos;
+    }
+
+    public void setMyVideos(List<Video> myVideos) {
+        this.myVideos = myVideos;
     }
 
     public User(String account, Gender gender, String pwd, int type, String header, int age, String education, String label) {

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author iYmz
  */
 @RestController
-@RequestMapping(value="/")
 public class TestController {
 
     @RequestMapping(value = "/test")
