@@ -12,22 +12,36 @@ import java.util.Date;
 @Entity
 @Table(name = "comment")
 public class comment implements Serializable {
-    public comment() {
-    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
-    private User user_id;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @OneToOne
-    private Video video_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
+    private Video video;
 
-    @OneToOne
-    private User to;
+    @Column(name = "to_user_id", nullable = false)
+    private Long toUserId;
 
+    @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
     private Date date;
+
+    public comment() {
+    }
+
+    public comment(Long userId, Video video, Long toUserId, String content, Date date) {
+        this.userId = userId;
+        this.video = video;
+        this.toUserId = toUserId;
+        this.content = content;
+        this.date = date;
+    }
 
     public int getId() {
         return id;
@@ -37,28 +51,28 @@ public class comment implements Serializable {
         this.id = id;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Video getVideo_id() {
-        return video_id;
+    public Video getVideo() {
+        return video;
     }
 
-    public void setVideo_id(Video video_id) {
-        this.video_id = video_id;
+    public void setVideo(Video video) {
+        this.video = video;
     }
 
-    public User getTo() {
-        return to;
+    public Long getToUserId() {
+        return toUserId;
     }
 
-    public void setTo(User to) {
-        this.to = to;
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
     }
 
     public String getContent() {
@@ -74,14 +88,6 @@ public class comment implements Serializable {
     }
 
     public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public comment(User user_id, Video video_id, User to, String content, Date date) {
-        this.user_id = user_id;
-        this.video_id = video_id;
-        this.to = to;
-        this.content = content;
         this.date = date;
     }
 }

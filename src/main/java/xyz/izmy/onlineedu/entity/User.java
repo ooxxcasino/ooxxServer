@@ -2,6 +2,7 @@ package xyz.izmy.onlineedu.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import xyz.izmy.onlineedu.pojo.Gender;
@@ -17,6 +18,9 @@ public class User implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable=false)
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private String account;
@@ -49,10 +53,28 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String label;
 
+
+    private String email;
+    private String phone;
+    private Date birthday;
+
+
     @OneToMany
     private List<Video> myVideos;
 
+   @OneToMany
+   private List<Video> watchedVideos;
+
+
     public User() {
+    }
+
+    public List<Video> getWatchedVideos() {
+        return watchedVideos;
+    }
+
+    public void setWatchedVideos(List<Video> watchedVideos) {
+        this.watchedVideos = watchedVideos;
     }
 
     public List<Video> getMyVideos() {
@@ -72,6 +94,54 @@ public class User implements Serializable {
         this.age = age;
         this.education = education;
         this.label = label;
+    }
+
+    public User(String name, String account, Gender gender, String pwd, int type, String header, int age, String education, String label, String email, String phone, Date birthday, List<Video> myVideos) {
+        this.name = name;
+        this.account = account;
+        this.gender = gender;
+        this.pwd = pwd;
+        this.type = type;
+        this.header = header;
+        this.age = age;
+        this.education = education;
+        this.label = label;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.myVideos = myVideos;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public Long getId() {
