@@ -2,6 +2,7 @@ package xyz.izmy.onlineedu.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import xyz.izmy.onlineedu.pojo.Gender;
@@ -18,7 +19,10 @@ public class User implements Serializable {
     @Column(name = "id", nullable=false)
     private Long id;
 
-    @Column(nullable = false)
+   // @Column(nullable = false,unique = true)
+    private String name;
+
+    @Column(nullable = false,unique = true)
     private String account;
 
     @Enumerated(EnumType.STRING)
@@ -29,30 +33,48 @@ public class User implements Serializable {
     private String pwd;
 
 
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private int type;
 
     //用户头像url地址
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String header;
 
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private int age;
 
     //用户教育水平
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private String education;
 
     //用户个人说明
 
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private String label;
+
+
+    private String email;
+    private String phone;
+    private Date birthday;
+
 
     @OneToMany
     private List<Video> myVideos;
 
+   @OneToMany
+   private List<Video> watchedVideos;
+
+
     public User() {
+    }
+
+    public List<Video> getWatchedVideos() {
+        return watchedVideos;
+    }
+
+    public void setWatchedVideos(List<Video> watchedVideos) {
+        this.watchedVideos = watchedVideos;
     }
 
     public List<Video> getMyVideos() {
@@ -72,6 +94,54 @@ public class User implements Serializable {
         this.age = age;
         this.education = education;
         this.label = label;
+    }
+
+    public User(String name, String account, Gender gender, String pwd, int type, String header, int age, String education, String label, String email, String phone, Date birthday, List<Video> myVideos) {
+        this.name = name;
+        this.account = account;
+        this.gender = gender;
+        this.pwd = pwd;
+        this.type = type;
+        this.header = header;
+        this.age = age;
+        this.education = education;
+        this.label = label;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.myVideos = myVideos;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public Long getId() {

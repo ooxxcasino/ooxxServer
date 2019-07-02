@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Override
     Optional<User> findById(Long aLong);
-
+    User findUserByAccount(String account);
     User findUserById(Long id);
+    boolean existsUserByAccount(String account);
 }
