@@ -2,6 +2,8 @@ package xyz.izmy.onlineedu.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * video entity
@@ -44,6 +46,26 @@ public class Video implements Serializable {
     //视频类型
     @Column(name="video_type")
     private String type;
+
+    //视频下面的评论
+    @OneToMany(
+            mappedBy = "video",
+            cascade = CascadeType.ALL
+    )
+    private List<comment> videoCommnets = new ArrayList<>();
+
+    //每个人给视频打分
+    @OneToMany
+    private List<score> videoScores;
+
+
+    public List<comment> getVideoCommnets() {
+        return videoCommnets;
+    }
+
+    public void setVideoCommnets(List<comment> videoCommnets) {
+        this.videoCommnets = videoCommnets;
+    }
 
     protected Video() {
     }

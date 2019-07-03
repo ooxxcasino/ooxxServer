@@ -1,22 +1,8 @@
+
 package xyz.izmy.onlineedu.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.izmy.onlineedu.entity.Video;
 
-import java.util.List;
-
-/**
- *
- * @author SEEDzy
- *
- */
-
-
-public interface VideoRepository extends CrudRepository<Video,Long> {
-
-    @Override
-    List<Video> findAll();
-    List<Video> findVideoByInfoLike(String info);
-
-
+public interface VideoRepository extends JpaRepository<Video,Long> {
 }
