@@ -1,3 +1,4 @@
+
 package xyz.izmy.onlineedu.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
