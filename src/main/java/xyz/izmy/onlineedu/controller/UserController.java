@@ -96,7 +96,7 @@ public class UserController {
         JSONObject json = JSONWithCodeAndInfo(code,msg);
         return json;
     }
-
+    @RequestMapping(value = "")
     public User getUserAccountAndPwdFromJSONObject(JSONObject jsonObject)
     {
         JSONObject json=new JSONObject();

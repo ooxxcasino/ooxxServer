@@ -60,6 +60,8 @@ public class UserServiceImp {
 
     public int addMyVideo(String userAccount,Long videoId) throws ServiceException {
 
+        if(!userRepository.existsUserByAccount(userAccount)|| !videoRepository.existsVideoById(videoId))
+            return 0;//用户或者视频不存在
         User user = userRepository.findUserByAccount(userAccount);
         Video video = videoRepository.findById(videoId).orElse(null);
         List<Video> videoList = user.getMyVideos();
@@ -73,6 +75,11 @@ public class UserServiceImp {
            // return 0; //我的视频保存失败
         }
         return 0;//我的视频保存失败
+    }
+
+    public Object getMyVideo()
+    {
+        return null;
     }
 
 }

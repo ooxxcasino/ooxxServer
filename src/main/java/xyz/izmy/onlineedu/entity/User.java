@@ -63,40 +63,13 @@ public class User implements Serializable {
     private List<Video> myVideos;
 
    @OneToMany
-   private List<Video> watchedVideos;
+   private List<history> watchedHistory;
 
 
     public User() {
     }
 
-    public List<Video> getWatchedVideos() {
-        return watchedVideos;
-    }
-
-    public void setWatchedVideos(List<Video> watchedVideos) {
-        this.watchedVideos = watchedVideos;
-    }
-
-    public List<Video> getMyVideos() {
-        return myVideos;
-    }
-
-    public void setMyVideos(List<Video> myVideos) {
-        this.myVideos = myVideos;
-    }
-
-    public User(String account, Gender gender, String pwd, int type, String header, int age, String education, String label) {
-        this.account = account;
-        this.gender = gender;
-        this.pwd = pwd;
-        this.type = type;
-        this.header = header;
-        this.age = age;
-        this.education = education;
-        this.label = label;
-    }
-
-    public User(String name, String account, Gender gender, String pwd, int type, String header, int age, String education, String label, String email, String phone, Date birthday, List<Video> myVideos) {
+    public User(String name, String account, Gender gender, String pwd, int type, String header, int age, String education, String label, String email, String phone, Date birthday, List<Video> myVideos, List<history> watchedHistory) {
         this.name = name;
         this.account = account;
         this.gender = gender;
@@ -110,38 +83,7 @@ public class User implements Serializable {
         this.phone = phone;
         this.birthday = birthday;
         this.myVideos = myVideos;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+        this.watchedHistory = watchedHistory;
     }
 
     public Long getId() {
@@ -150,6 +92,14 @@ public class User implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAccount() {
@@ -214,5 +164,45 @@ public class User implements Serializable {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public List<Video> getMyVideos() {
+        return myVideos;
+    }
+
+    public void setMyVideos(List<Video> myVideos) {
+        this.myVideos = myVideos;
+    }
+
+    public List<history> getWatchedHistory() {
+        return watchedHistory;
+    }
+
+    public void setWatchedHistory(List<history> watchedHistory) {
+        this.watchedHistory = watchedHistory;
     }
 }
