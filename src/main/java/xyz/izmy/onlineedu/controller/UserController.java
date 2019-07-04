@@ -1,7 +1,6 @@
 package xyz.izmy.onlineedu.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import xyz.izmy.onlineedu.entity.User;
@@ -13,7 +12,7 @@ import xyz.izmy.onlineedu.service.impl.UserServiceImp;
  * @author iYmz
  */
 
-
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -42,6 +41,7 @@ public class UserController {
     @ResponseBody
     public Object loginUser( @RequestBody JSONObject userJson)
     {
+
         JSONObject jsonObject = new JSONObject();
         JSONObject dataJsonObject = new JSONObject();
        User user = getUserAccountAndPwdFromJSONObject(userJson);
@@ -64,32 +64,6 @@ public class UserController {
     }
 
 
-//    @RequestMapping(value = "/login",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Object loginUser( @RequestBody JSONObject jsonObject)
-//    {
-//
-//        JSONObject json=new JSONObject();
-//        User user = new User();
-//        String account = jsonObject.get("account").toString();
-//        String pwd =  jsonObject.get("pwd").toString();
-//        try{
-//            user = userRepository.findUserByAccount(account);
-//            if(user.getPwd().equals(pwd))
-//                json.put("status","success");
-//            else json.put("status","failed");
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//            json.put("status","failed");
-//            return json;
-//        }
-//
-//        return JSON.toJSON(json);
-//    }
-
-
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public Object registUser( @RequestBody JSONObject userJson)
@@ -108,6 +82,21 @@ public class UserController {
 
        // return JSON.toJSON(json);
     }
+
+    @RequestMapping(value = "/video",method = RequestMethod.POST)
+    @ResponseBody
+    public Object addUserVideo(@RequestBody JSONObject jsonObject)
+    {
+        String userAccount = jsonObject.get("userAccount").toString();
+        Long videoId =jsonObject.getLong("videoId");
+        int code = userServiceImp.addMyVideo(userAccount,videoId);
+        String msg;
+        if(code==1)msg="Success";
+        else msg="failed";
+        JSONObject json = JSONWithCodeAndInfo(code,msg);
+        return json;
+    }
+
     public User getUserAccountAndPwdFromJSONObject(JSONObject jsonObject)
     {
         JSONObject json=new JSONObject();
@@ -120,38 +109,18 @@ public class UserController {
         return user;
     }
 
-//    @RequestMapping(value = "/register",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Object registUser( @RequestBody JSONObject jsonObject)
-//    {
-//       JSONObject json=new JSONObject();
-//       User user = new User();
-//       String account = jsonObject.get("account").toString();
-//       String pwd =  jsonObject.get("pwd").toString();
-//       user.setAccount(account);
-//       user.setPwd(pwd);
-//        if(!userRepository.existsUserByAccount(user.getAccount()))
-//        {
-//            //user.setPwd(user);
-//
-//            System.out.println("注册密码是："+user.getPwd());
-//            try{
-//                userRepository.save(user);
-//                json.put("status","success");
-//            }catch (Exception e){
-//                e.printStackTrace();
-//                json.put("status","failed");
-//                return JSON.toJSON(json);
-//            }
-//
-//        }else
-//            json.put("status","exist");
-//
-//
-//
-//        return JSON.toJSON(json);
-//    }
-
+    /**
+     *
+     * @param code
+     * @param info
+     * @return
+     * {
+     *     "code":code,
+     *     "data":{
+     *         "info":"msg"
+     *     }
+     * }
+     */
     public JSONObject JSONWithCodeAndInfo(int code,String info){
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonInfo = new JSONObject();

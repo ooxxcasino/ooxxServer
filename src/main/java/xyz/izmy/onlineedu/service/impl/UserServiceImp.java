@@ -3,10 +3,14 @@ package xyz.izmy.onlineedu.service.impl;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 import xyz.izmy.onlineedu.entity.User;
+import xyz.izmy.onlineedu.entity.Video;
 import xyz.izmy.onlineedu.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import xyz.izmy.onlineedu.repository.VideoRepository;
+
+import java.util.List;
 
 /**
  * @author iYmz
@@ -14,11 +18,13 @@ import io.jsonwebtoken.Jwts;
 @Service
 public class UserServiceImp {
     private final UserRepository userRepository;
+    private final VideoRepository videoRepository;
 
-
-    public UserServiceImp(UserRepository userRepository) {
+    public UserServiceImp(UserRepository userRepository, VideoRepository videoRepository) {
         this.userRepository = userRepository;
+        this.videoRepository = videoRepository;
     }
+
 
     /**
      * 用户注册
@@ -52,6 +58,21 @@ public class UserServiceImp {
             return 0;//用户已存在
     }
 
+    public int addMyVideo(String userAccount,Long videoId) throws ServiceException {
 
+        User user = userRepository.findUserByAccount(userAccount);
+        Video video = videoRepository.findById(videoId).orElse(null);
+        List<Video> videoList = user.getMyVideos();
+        videoList.add(video);
+        user.setMyVideos(videoList);
+        try {
+            userRepository.save(user);
+            return 1; //我的视频保存成功
+        } catch (Exception e){
+            e.printStackTrace();
+           // return 0; //我的视频保存失败
+        }
+        return 0;//我的视频保存失败
+    }
 
 }
