@@ -67,7 +67,7 @@ public class Video implements Serializable {
         this.videoCommnets = videoCommnets;
     }
 
-    protected Video() {
+    public Video() {
     }
 
     public Video(String name, String info, int price, String imageUrl, String url, int times, String type) {
