@@ -85,6 +85,8 @@ public class VideoController {
         return jsonObject;
     }
 
+
+    //返回评分
     @PostMapping(value = "/star")
     public Object videoScore(@RequestBody JSONObject jsonObject){
         int temporaryScore=0;
@@ -94,18 +96,25 @@ public class VideoController {
         try{
             Video video = videoRepository.findVideoById(jsonObject.getLong("id"));
             temporaryScore=(video.getVideoScores().getScore()+jsonObject.getIntValue("star"));
-            score vScore = new score();
-            //video.getVideoScores();
-            //score=(score_now+score_get)/score_times
-            temporaryScore=temporaryScore/2;
-            vScore.setId(video.getVideoScores().getId());
-            vScore.setScore(temporaryScore);
-            vScore.setScoreTimes(video.getVideoScores().getScoreTimes()+1);
-            scoreRepository.save(vScore);
-            video.setVideoScores(vScore);
-            videoRepository.save(video);
-            s2JsonObject.put("star",temporaryScore);
-            sJsonObject.put("data",s2JsonObject);
+            if(jsonObject.getIntValue("star")==0){
+                s2JsonObject.put("star",temporaryScore);
+                sJsonObject.put("data",s2JsonObject);
+                return sJsonObject;
+            }
+            else {
+                score vScore = new score();
+                //video.getVideoScores();
+                //score=(score_now+score_get)/score_times
+                temporaryScore=temporaryScore/2;
+                vScore.setId(video.getVideoScores().getId());
+                vScore.setScore(temporaryScore);
+                vScore.setScoreTimes(video.getVideoScores().getScoreTimes()+1);
+                scoreRepository.save(vScore);
+                video.setVideoScores(vScore);
+                videoRepository.save(video);
+                s2JsonObject.put("star",temporaryScore);
+                sJsonObject.put("data",s2JsonObject);
+            }
         }
         catch (Exception e)
         {
