@@ -16,18 +16,28 @@ public class score implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, name = "user_id")
-    private Long userId;
+/*    @Column(nullable = false, name = "user_id")
+    private Long userId;*/
 
     @Column(nullable = false)
     private int score;
 
-    public score(Long userId, int score) {
-        this.userId = userId;
+    private int scoreTimes;
+
+    public score(int score, int scoreTimes) {
         this.score = score;
+        this.scoreTimes = scoreTimes;
+    }
+
+    public int getScoreTimes() {
+        return scoreTimes;
+    }
+
+    public void setScoreTimes(int scoreTimes) {
+        this.scoreTimes = scoreTimes;
     }
 
     public int getId() {
@@ -38,13 +48,13 @@ public class score implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
+/*    public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
+    }*/
 
     public int getScore() {
         return score;

@@ -55,9 +55,17 @@ public class Video implements Serializable {
     private List<comment> videoCommnets = new ArrayList<>();
 
     //每个人给视频打分
-    @OneToMany
-    private List<score> videoScores;
+    @OneToOne
+    private score videoScores;
 
+
+    public score getVideoScores() {
+        return videoScores;
+    }
+
+    public void setVideoScores(score videoScores) {
+        this.videoScores = videoScores;
+    }
 
     public List<comment> getVideoCommnets() {
         return videoCommnets;
