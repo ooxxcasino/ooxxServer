@@ -5,14 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.spring.web.json.Json;
-import xyz.izmy.onlineedu.entity.Comment;
-import xyz.izmy.onlineedu.entity.User;
-import xyz.izmy.onlineedu.entity.Video;
-import xyz.izmy.onlineedu.entity.score;
-import xyz.izmy.onlineedu.repository.CommentRepository;
-import xyz.izmy.onlineedu.repository.ScoreRepository;
-import xyz.izmy.onlineedu.repository.UserRepository;
-import xyz.izmy.onlineedu.repository.VideoRepository;
+import xyz.izmy.onlineedu.entity.*;
+import xyz.izmy.onlineedu.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +28,8 @@ public class VideoController {
     private CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private UserScoreRepository userScoreRepository;
 
 /*    @GetMapping(value = "/list")
     public Object getVideoList(){
@@ -98,37 +93,51 @@ public class VideoController {
     @PostMapping(value = "/star")
     public Object videoScore(@RequestBody JSONObject jsonObject){
         int temporaryScore=0;
-        int times;
+        int status=1;
+        score vScore = new score();
         JSONObject sJsonObject = new JSONObject();
         JSONObject s2JsonObject = new JSONObject();
         try{
             Video video = videoRepository.findVideoById(jsonObject.getLong("id"));
-            temporaryScore=(video.getVideoScores().getScore()+jsonObject.getIntValue("star"));
-            if(jsonObject.getIntValue("star")==0){
-                s2JsonObject.put("star",temporaryScore);
-                sJsonObject.put("data",s2JsonObject);
-                return sJsonObject;
-            }
-            else {
-                score vScore = new score();
-                //video.getVideoScores();
-                //score=(score_now+score_get)/score_times
-                temporaryScore=temporaryScore/2;
+            List<UserScore> userScoreList = video.getVideoScores().getUserScoreList();
+            temporaryScore=video.getVideoScores().getScore();
+            //score=(score_now+score_get)/score_times
+
+            //保存已评论用户账号
+            if(userScoreRepository.findUserScoreByUserAccount(jsonObject.getString("userAccount"))==null||userScoreRepository.findUserScoreByUserAccount(jsonObject.getString("userAccount")).getVideoId()!=jsonObject.getLong("id")) {
+                if(temporaryScore==0){
+                    temporaryScore =jsonObject.getIntValue("star");
+                }
+                else {
+                    temporaryScore = temporaryScore+jsonObject.getIntValue("star");
+                    temporaryScore = temporaryScore/2;
+                }
+                UserScore userScore = new UserScore();
+                userScore.setUserAccount(jsonObject.getString("userAccount"));
+                userScore.setVideoId(jsonObject.getLong("id"));
+                userScoreRepository.save(userScore);
+                userScoreList.add(userScore);
+                status=0;
+
                 vScore.setId(video.getVideoScores().getId());
                 vScore.setScore(temporaryScore);
+                vScore.setUserScoreList(userScoreList);
                 vScore.setScoreTimes(video.getVideoScores().getScoreTimes()+1);
                 scoreRepository.save(vScore);
+
                 video.setVideoScores(vScore);
                 videoRepository.save(video);
-                s2JsonObject.put("star",temporaryScore);
-                sJsonObject.put("data",s2JsonObject);
             }
+            s2JsonObject.put("star",temporaryScore);
+            sJsonObject.put("status",status);
+            sJsonObject.put("data",s2JsonObject);
+            return sJsonObject;
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return sJsonObject;
+        return null;
     }
 
     //添加视频评论
