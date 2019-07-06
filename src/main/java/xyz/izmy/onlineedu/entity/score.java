@@ -3,6 +3,7 @@ package xyz.izmy.onlineedu.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 用户类
@@ -27,9 +28,21 @@ public class score implements Serializable {
 
     private int scoreTimes;
 
-    public score(int score, int scoreTimes) {
+    @OneToMany
+    private List<UserScore> userScoreList;
+
+    public score(int score, int scoreTimes, List<UserScore> userScoreList) {
         this.score = score;
         this.scoreTimes = scoreTimes;
+        this.userScoreList = userScoreList;
+    }
+
+    public List<UserScore> getUserScoreList() {
+        return userScoreList;
+    }
+
+    public void setUserScoreList(List<UserScore> userScoreList) {
+        this.userScoreList = userScoreList;
     }
 
     public int getScoreTimes() {
