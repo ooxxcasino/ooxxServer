@@ -48,11 +48,8 @@ public class Video implements Serializable {
     private String type;
 
     //视频下面的评论
-    @OneToMany(
-            mappedBy = "video",
-            cascade = CascadeType.ALL
-    )
-    private List<comment> videoCommnets = new ArrayList<>();
+    @OneToMany
+    private List<Comment> videoComments;
 
     //每个人给视频打分
     @OneToOne
@@ -67,12 +64,12 @@ public class Video implements Serializable {
         this.videoScores = videoScores;
     }
 
-    public List<comment> getVideoCommnets() {
-        return videoCommnets;
+    public List<Comment> getVideoComments() {
+        return videoComments;
     }
 
-    public void setVideoCommnets(List<comment> videoCommnets) {
-        this.videoCommnets = videoCommnets;
+    public void setVideoComments(List<Comment> videoComments) {
+        this.videoComments = videoComments;
     }
 
     public Video() {
