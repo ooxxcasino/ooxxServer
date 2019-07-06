@@ -1,18 +1,21 @@
 package xyz.izmy.onlineedu.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
+import xyz.izmy.onlineedu.entity.Comment;
+import xyz.izmy.onlineedu.entity.User;
 import xyz.izmy.onlineedu.entity.Video;
 import xyz.izmy.onlineedu.entity.score;
+import xyz.izmy.onlineedu.repository.CommentRepository;
 import xyz.izmy.onlineedu.repository.ScoreRepository;
+import xyz.izmy.onlineedu.repository.UserRepository;
 import xyz.izmy.onlineedu.repository.VideoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -27,6 +30,10 @@ public class VideoController {
     private VideoRepository videoRepository;
     @Autowired
     private ScoreRepository scoreRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private UserRepository userRepository;
 
 
 /*    @GetMapping(value = "/list")
@@ -35,6 +42,7 @@ public class VideoController {
         return video;
     }*/
 
+//视频列表
     @GetMapping(value = "/list")
     public Object getVideoList(){
         JSONObject jsonObject = new JSONObject();
@@ -123,7 +131,44 @@ public class VideoController {
         return sJsonObject;
     }
 
+    //添加视频评论
+    @PostMapping(value = "/addComment")
+    public Object addVideoComment(@RequestBody JSONObject jsonObject){
+        Comment comment = new Comment();
+        User user = new User();
+        try{
+            Video video = videoRepository.findVideoById(jsonObject.getLong("videoId"));
+            List<Comment> commentList = video.getVideoComments();
+            if(jsonObject.getString("userAccount")!=null)
+            {
+                user = userRepository.findUserByAccount(jsonObject.getString("userAccount"));
+                comment.setUserName(user.getName());
+            }
+            else if(jsonObject.getString("toUserAccount")!=null){
+                user = userRepository.findUserByAccount(jsonObject.getString("toUserAccount"));
+                comment.setToUserName(user.getName());
+                comment.setToCommentId(jsonObject.getLong("commentId"));
+                comment.setUserName(commentRepository.findCommentById(jsonObject.getLong("commentId")).getUserName());
+            }
+            comment.setContent(jsonObject.getString("content"));
+            comment.setDate(jsonObject.getDate("date"));
+            comment.setUserId(user.getId());
+            commentRepository.save(comment);
+            commentList.add(comment);
+            video.setVideoComments(commentList);
+            videoRepository.save(video);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
+
+
+
+    //添加视频并初始化
     @PostMapping(value = "/add")
     public Object videoAdd(/*@RequestParam("video_image_url") String video_image_url
             ,@RequestParam("video_info") String video_info,@RequestParam("video_name") String video_name
