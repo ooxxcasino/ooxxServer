@@ -93,7 +93,7 @@ public class VideoController {
     @PostMapping(value = "/star")
     public Object videoScore(@RequestBody JSONObject jsonObject){
         int temporaryScore=0;
-        int status=1;
+        int status = 1;
         score vScore = new score();
         JSONObject sJsonObject = new JSONObject();
         JSONObject s2JsonObject = new JSONObject();
@@ -105,28 +105,33 @@ public class VideoController {
 
             //保存已评论用户账号
             if(userScoreRepository.findUserScoreByUserAccount(jsonObject.getString("userAccount"))==null||userScoreRepository.findUserScoreByUserAccount(jsonObject.getString("userAccount")).getVideoId()!=jsonObject.getLong("id")) {
+                if(jsonObject.getIntValue("star")!=0) {
+                    if(temporaryScore==0){
+                        temporaryScore =jsonObject.getIntValue("star");
+                    }
+                    else{
+                        temporaryScore = temporaryScore + jsonObject.getIntValue("star");
+                        temporaryScore = temporaryScore / 2;
+                    }
+                    UserScore userScore = new UserScore();
+                    userScore.setUserAccount(jsonObject.getString("userAccount"));
+                    userScore.setVideoId(jsonObject.getLong("id"));
+                    userScoreRepository.save(userScore);
+                    userScoreList.add(userScore);
+
+                    vScore.setId(video.getVideoScores().getId());
+                    vScore.setScore(temporaryScore);
+                    vScore.setUserScoreList(userScoreList);
+                    vScore.setScoreTimes(video.getVideoScores().getScoreTimes()+1);
+                    scoreRepository.save(vScore);
+
+                    video.setVideoScores(vScore);
+                    videoRepository.save(video);
+                }
                 if(temporaryScore==0){
                     temporaryScore =jsonObject.getIntValue("star");
                 }
-                else {
-                    temporaryScore = temporaryScore+jsonObject.getIntValue("star");
-                    temporaryScore = temporaryScore/2;
-                }
-                UserScore userScore = new UserScore();
-                userScore.setUserAccount(jsonObject.getString("userAccount"));
-                userScore.setVideoId(jsonObject.getLong("id"));
-                userScoreRepository.save(userScore);
-                userScoreList.add(userScore);
                 status=0;
-
-                vScore.setId(video.getVideoScores().getId());
-                vScore.setScore(temporaryScore);
-                vScore.setUserScoreList(userScoreList);
-                vScore.setScoreTimes(video.getVideoScores().getScoreTimes()+1);
-                scoreRepository.save(vScore);
-
-                video.setVideoScores(vScore);
-                videoRepository.save(video);
             }
             s2JsonObject.put("star",temporaryScore);
             sJsonObject.put("status",status);
